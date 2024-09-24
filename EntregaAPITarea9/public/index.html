@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumo de API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff0000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #ffcc00;
+            color: white;
+        }
+        .pokemon-info {
+            background-color: #e6ffe6;
+        }
+        .types-info {
+            background-color: #ffe6e6;
+        }
+        button {
+            background-color: #ff1100;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #ffb300;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data de Poke API(Pikachu)</h1>
+    <button id="fetchData">presiona para obtener datos del pokemon desde PokeAPI</button>
+    
+    <h2>Detalles del Pokemon</h2>
+    <table class="pokemon-info">
+        <tr>
+            <th>Nombre</th>
+            <td id="pokemonName"></td>
+        </tr>
+        <tr>
+            <th>Altura</th>
+            <td id="pokemonHeight"></td>
+        </tr>
+        <tr>
+            <th>Peso</th>
+            <td id="pokemonWeight"></td>
+        </tr>
+        <tr>
+            <th>Habilidades</th>
+            <td id="pokemonAbilities"></td>
+        </tr>
+    </table>
+
+    <h2>Lista de tipos de Pokemon</h2>
+    <table class="types-info">
+        <tr>
+            <th>Tipos</th>
+            <td id="typesData"></td>
+        </tr>
+    </table>
+
+    <script>
+        document.getElementById('fetchData').addEventListener('click', () => {
+            fetch('/api/combined')
+                .then(response => response.json())
+                .then(data => {
+                    // Mostrar los detalles del Pokémon
+                    document.getElementById('pokemonName').textContent = data.pokemon.name;
+                    document.getElementById('pokemonHeight').textContent = data.pokemon.height;
+                    document.getElementById('pokemonWeight').textContent = data.pokemon.weight;
+                    document.getElementById('pokemonAbilities').textContent = data.pokemon.abilities.map(a => a.ability.name).join(', ');
+
+                    // Mostrar los tipos de Pokémon
+                    const typesInfo = data.types.results.map(type => type.name).join(', ');
+                    document.getElementById('typesData').textContent = typesInfo;
+                })
+                .catch(error => {
+                    console.error('Error al obtener datos:', error);
+                });
+        });
+    </script>
+</body>
+</html>
